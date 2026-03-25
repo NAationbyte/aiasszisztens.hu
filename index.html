@@ -3,705 +3,511 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Asszisztens – Mesterséges Intelligencia Ügyfélszolgálat Vállalkozásoknak</title>
-    <meta name="description" content="WhatsApp és webes AI chatbot vállalkozásoknak. 24/7 ügyfélszolgálat, időpontfoglalás, árajánlatkérés – automatikusan. Setup 24 órán belül.">
+    <title>AI Asszisztens – Mesterséges Intelligencia Ügyfélszolgálat</title>
+    <meta name="description" content="WhatsApp és webes AI chatbot vállalkozásoknak. 24/7 ügyfélszolgálat, automatikus lead gyűjtés. Setup 24 órán belül.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6C3AED;
-            --primary-dark: #5B21B6;
-            --primary-light: #8B5CF6;
-            --accent: #10B981;
-            --accent-dark: #059669;
-            --bg: #FAFAFA;
-            --bg-dark: #0F0F23;
-            --text: #1F2937;
-            --text-light: #6B7280;
-            --text-white: #F9FAFB;
-            --card: #FFFFFF;
-            --border: #E5E7EB;
-            --gradient: linear-gradient(135deg, #6C3AED 0%, #3B82F6 50%, #10B981 100%);
+            --bg: #09090b;
+            --bg-card: #18181b;
+            --bg-card-hover: #1f1f23;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --purple: #a855f7;
+            --purple-dark: #7c3aed;
+            --purple-glow: rgba(168,85,247,0.15);
+            --blue: #3b82f6;
+            --cyan: #22d3ee;
+            --green: #10b981;
+            --green-glow: rgba(16,185,129,0.15);
+            --gradient: linear-gradient(135deg, #a855f7 0%, #3b82f6 50%, #22d3ee 100%);
+            --gradient-text: linear-gradient(135deg, #c084fc, #60a5fa, #67e8f9);
+            --mono: 'JetBrains Mono', monospace;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        html { scroll-behavior: smooth; }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: var(--text);
-            background: var(--bg);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+        html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow-x: hidden; line-height: 1.6; }
 
-        /* ===== NAVIGATION ===== */
+        /* ===== GRID BG ===== */
+        .grid-bg {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+            background-image: 
+                linear-gradient(rgba(168,85,247,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(168,85,247,0.03) 1px, transparent 1px);
+            background-size: 64px 64px;
+        }
+        .glow-orb {
+            position: fixed; width: 600px; height: 600px; border-radius: 50%;
+            filter: blur(120px); opacity: 0.07; pointer-events: none; z-index: 0;
+        }
+        .glow-1 { background: var(--purple); top: -200px; left: -100px; }
+        .glow-2 { background: var(--cyan); bottom: -200px; right: -100px; }
+
+        /* ===== NAV ===== */
         nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(20px);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            background: rgba(9,9,11,0.8);
+            backdrop-filter: saturate(180%) blur(20px);
             border-bottom: 1px solid var(--border);
-            z-index: 1000;
-            padding: 0.8rem 0;
         }
         .nav-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            max-width: 1100px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 24px; height: 56px;
         }
         .logo {
-            font-size: 1.3rem;
-            font-weight: 800;
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-decoration: none;
+            font-size: 18px; font-weight: 800; text-decoration: none;
+            background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
-        .nav-links { display: flex; gap: 2rem; align-items: center; }
-        .nav-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links { display: flex; gap: 28px; align-items: center; }
+        .nav-links a { font-size: 13px; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--text); }
         .nav-cta {
-            background: var(--primary) !important;
-            color: white !important;
-            padding: 0.6rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600 !important;
-            transition: background 0.2s;
+            background: var(--purple) !important; color: white !important;
+            padding: 8px 18px; border-radius: 8px; font-weight: 600 !important;
+            transition: all 0.2s; font-size: 13px !important;
         }
-        .nav-cta:hover { background: var(--primary-dark) !important; }
+        .nav-cta:hover { background: var(--purple-dark) !important; }
 
         /* ===== HERO ===== */
         .hero {
-            padding: 8rem 1.5rem 5rem;
-            text-align: center;
-            max-width: 900px;
-            margin: 0 auto;
+            position: relative; z-index: 1;
+            padding: 140px 24px 80px; text-align: center;
+            max-width: 900px; margin: 0 auto;
         }
         .hero-badge {
-            display: inline-block;
-            background: rgba(108,58,237,0.1);
-            color: var(--primary);
-            padding: 0.4rem 1rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            padding: 6px 16px; border-radius: 100px;
+            font-size: 13px; font-weight: 500; color: var(--text-secondary);
+            margin-bottom: 24px;
         }
+        .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
         .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3.5rem);
-            font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 1.5rem;
-            color: var(--bg-dark);
+            font-size: clamp(40px, 6vw, 64px); font-weight: 900;
+            letter-spacing: -0.04em; line-height: 1.05; margin-bottom: 20px;
         }
-        .hero h1 span {
-            background: var(--gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .hero h1 .gradient {
+            background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .hero p {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            max-width: 650px;
-            margin: 0 auto 2.5rem;
+            font-size: 18px; color: var(--text-secondary); max-width: 560px;
+            margin: 0 auto 32px; line-height: 1.6;
         }
-        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
         .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.9rem 2rem;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            cursor: pointer;
-            border: none;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px; border-radius: 10px;
+            font-size: 14px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none; font-family: inherit;
         }
         .btn-primary {
-            background: var(--primary);
-            color: white;
-            box-shadow: 0 4px 14px rgba(108,58,237,0.3);
+            background: var(--gradient); color: white;
+            box-shadow: 0 0 20px var(--purple-glow), 0 4px 12px rgba(0,0,0,0.3);
         }
-        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 30px var(--purple-glow), 0 8px 20px rgba(0,0,0,0.4); }
         .btn-secondary {
-            background: white;
-            color: var(--text);
-            border: 2px solid var(--border);
+            background: var(--bg-card); color: var(--text);
+            border: 1px solid var(--border);
         }
-        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-secondary:hover { border-color: var(--border-hover); background: var(--bg-card-hover); }
 
-        /* ===== SOCIAL PROOF ===== */
-        .social-proof {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 3rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
+        /* ===== TERMINAL DEMO ===== */
+        .demo-section { max-width: 700px; margin: 0 auto 80px; padding: 0 24px; position: relative; z-index: 1; }
+        .terminal {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--purple-glow);
         }
-        .avatars {
-            display: flex;
+        .terminal-bar {
+            display: flex; align-items: center; gap: 8px;
+            padding: 12px 16px; background: rgba(255,255,255,0.03);
+            border-bottom: 1px solid var(--border);
         }
-        .avatars span {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 3px solid white;
-            margin-left: -10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1rem;
-        }
-        .avatars span:first-child { margin-left: 0; }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dot.red { background: #ef4444; }
+        .terminal-dot.yellow { background: #eab308; }
+        .terminal-dot.green { background: #22c55e; }
+        .terminal-title { flex: 1; text-align: center; font-size: 12px; color: var(--text-muted); font-family: var(--mono); }
+        .terminal-body { padding: 20px; font-family: var(--mono); font-size: 13px; line-height: 1.8; }
+        .terminal-line { opacity: 0; animation: termType 0.3s ease forwards; }
+        .terminal-line .prompt { color: var(--green); }
+        .terminal-line .cmd { color: var(--text); }
+        .terminal-line .comment { color: var(--text-muted); }
+        .terminal-line .string { color: var(--cyan); }
+        .terminal-line .keyword { color: var(--purple); }
+        .terminal-line .output { color: var(--text-secondary); }
+        @keyframes termType { to { opacity: 1; } }
 
-        /* ===== CHAT DEMO ===== */
-        .demo-section {
-            max-width: 700px;
-            margin: 2rem auto 4rem;
-            padding: 0 1.5rem;
+        /* ===== CHAT PREVIEW ===== */
+        .chat-preview {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 20px; margin-top: 16px;
         }
-        .chat-window {
-            background: #ECE5DD;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
-            position: relative;
+        .chat-preview-header {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
         }
-        .chat-header {
-            background: #075E54;
-            color: white;
-            padding: 0.8rem 1rem;
-            border-radius: 12px 12px 0 0;
-            margin: -1.5rem -1.5rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
+        .chat-preview-avatar {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: var(--gradient); display: flex; align-items: center;
+            justify-content: center; font-size: 16px;
         }
-        .chat-header-avatar {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
+        .chat-preview-name { font-size: 14px; font-weight: 600; }
+        .chat-preview-status { font-size: 11px; color: var(--green); }
+        .chat-msg {
+            padding: 10px 14px; border-radius: 12px; margin-bottom: 8px;
+            font-size: 13px; line-height: 1.5; max-width: 85%;
+            opacity: 0; transform: translateY(8px);
+            transition: all 0.4s cubic-bezier(.16,1,.3,1);
         }
-        .chat-header-info h4 { font-size: 0.95rem; margin-bottom: 0.1rem; }
-        .chat-header-info span { font-size: 0.75rem; opacity: 0.8; }
-        .msg {
-            max-width: 80%;
-            padding: 0.6rem 0.9rem;
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            position: relative;
+        .chat-msg.show { opacity: 1; transform: translateY(0); }
+        .chat-msg.customer { background: var(--purple-dark); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+        .chat-msg.bot { background: rgba(255,255,255,0.06); color: var(--text); border-bottom-left-radius: 4px; }
+        .chat-msg .time { font-size: 10px; color: var(--text-muted); margin-top: 4px; text-align: right; }
+
+        /* ===== STATS ===== */
+        .stats {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+            background: var(--border); border: 1px solid var(--border);
+            border-radius: 12px; overflow: hidden;
+            max-width: 800px; margin: 0 auto 80px;
+            position: relative; z-index: 1;
         }
-        .msg-in {
-            background: white;
-            margin-right: auto;
-            border-bottom-left-radius: 2px;
+        .stat {
+            background: var(--bg-card); padding: 28px 20px; text-align: center;
         }
-        .msg-out {
-            background: #DCF8C6;
-            margin-left: auto;
-            border-bottom-right-radius: 2px;
-        }
-        .msg-time {
-            font-size: 0.65rem;
-            color: #999;
-            text-align: right;
-            margin-top: 0.2rem;
-        }
+        .stat-number { font-size: 32px; font-weight: 800; background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
 
         /* ===== FEATURES ===== */
-        .features {
-            padding: 5rem 1.5rem;
-            max-width: 1200px;
-            margin: 0 auto;
+        .features { padding: 80px 24px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-tag {
+            font-family: var(--mono); font-size: 13px; font-weight: 500;
+            color: var(--purple); margin-bottom: 12px;
+            text-transform: uppercase; letter-spacing: 0.1em;
         }
-        .section-header {
-            text-align: center;
-            margin-bottom: 3.5rem;
-        }
-        .section-header h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 0.8rem;
-            color: var(--bg-dark);
-        }
-        .section-header p {
-            color: var(--text-light);
-            font-size: 1.1rem;
-            max-width: 550px;
-            margin: 0 auto;
-        }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
+        .section-header h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 12px; }
+        .section-header p { color: var(--text-secondary); font-size: 16px; max-width: 500px; margin: 0 auto; }
+        
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
         .feature-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            transition: all 0.3s;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 28px; transition: all 0.3s;
+            position: relative; overflow: hidden;
         }
-        .feature-card:hover {
-            border-color: var(--primary-light);
-            box-shadow: 0 10px 30px rgba(108,58,237,0.08);
-            transform: translateY(-4px);
+        .feature-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: var(--gradient); opacity: 0; transition: opacity 0.3s;
         }
+        .feature-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+        .feature-card:hover::before { opacity: 1; }
         .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--purple-glow); display: flex; align-items: center;
+            justify-content: center; font-size: 20px; margin-bottom: 16px;
         }
-        .feature-card h3 {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .feature-card p {
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
+        .feature-card h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+        .feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 
         /* ===== HOW IT WORKS ===== */
-        .how-it-works {
-            background: var(--bg-dark);
-            color: var(--text-white);
-            padding: 5rem 1.5rem;
-        }
-        .how-it-works .section-header h2 { color: white; }
-        .how-it-works .section-header p { color: rgba(255,255,255,0.6); }
-        .steps {
-            max-width: 800px;
-            margin: 0 auto;
-            display: grid;
-            gap: 2rem;
-        }
-        .step {
-            display: flex;
-            gap: 1.5rem;
-            align-items: flex-start;
-        }
-        .step-number {
-            background: var(--gradient);
-            color: white;
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 1.2rem;
-        }
-        .step h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
-        .step p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
-
-        /* ===== PRICING ===== */
-        .pricing {
-            padding: 5rem 1.5rem;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        .price-card {
-            background: var(--card);
-            border: 2px solid var(--border);
-            border-radius: 20px;
-            padding: 2.5rem 2rem;
-            text-align: center;
-            transition: all 0.3s;
+        .how-section { padding: 80px 24px; position: relative; z-index: 1; }
+        .how-grid { max-width: 700px; margin: 0 auto; display: grid; gap: 0; }
+        .how-step {
+            display: flex; gap: 24px; padding: 24px 0;
+            border-left: 2px solid var(--border); margin-left: 20px; padding-left: 32px;
             position: relative;
         }
-        .price-card.popular {
-            border-color: var(--primary);
-            box-shadow: 0 10px 40px rgba(108,58,237,0.15);
+        .how-step::before {
+            content: attr(data-step); position: absolute; left: -16px;
+            width: 30px; height: 30px; border-radius: 8px;
+            background: var(--gradient); color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800;
         }
-        .popular-badge {
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
+        .how-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .how-step p { font-size: 14px; color: var(--text-secondary); }
+
+        /* ===== PRICING ===== */
+        .pricing { padding: 80px 24px; max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .price-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 32px 24px; position: relative;
+            transition: all 0.3s;
         }
-        .price-card h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
+        .price-card.popular { border-color: var(--purple); box-shadow: 0 0 30px var(--purple-glow); }
+        .popular-tag {
+            position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+            background: var(--gradient); color: white;
+            padding: 4px 14px; border-radius: 100px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
         }
-        .price {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin: 1rem 0 0.3rem;
-        }
-        .price span { font-size: 1rem; font-weight: 500; color: var(--text-light); }
-        .price-desc {
-            color: var(--text-light);
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-        }
-        .price-features {
-            text-align: left;
-            list-style: none;
-            margin-bottom: 2rem;
-        }
+        .price-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .price-card .price-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+        .price-amount { font-size: 40px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 4px; }
+        .price-amount span { font-size: 14px; font-weight: 500; color: var(--text-muted); }
+        .popular .price-amount { background: var(--gradient-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .price-period { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+        .price-features { list-style: none; margin-bottom: 24px; }
         .price-features li {
-            padding: 0.4rem 0;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 6px 0; font-size: 13px; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 8px;
         }
-        .price-features li::before {
-            content: "✓";
-            color: var(--accent);
-            font-weight: 700;
+        .price-features li::before { content: "✓"; color: var(--green); font-weight: 700; font-size: 14px; }
+        .price-btn {
+            display: block; width: 100%; text-align: center;
+            padding: 12px; border-radius: 10px; font-family: inherit;
+            font-size: 14px; font-weight: 600; text-decoration: none;
+            transition: all 0.2s; cursor: pointer; border: none;
         }
+        .price-btn.primary { background: var(--gradient); color: white; }
+        .price-btn.primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px var(--purple-glow); }
+        .price-btn.secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .price-btn.secondary:hover { border-color: var(--border-hover); }
 
         /* ===== INDUSTRIES ===== */
-        .industries {
-            background: #F3F4F6;
-            padding: 5rem 1.5rem;
-        }
+        .industries { padding: 60px 24px; position: relative; z-index: 1; }
         .industries-grid {
-            max-width: 900px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
+            max-width: 800px; margin: 0 auto;
+            display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
         }
-        .industry-item {
-            background: white;
-            border-radius: 12px;
-            padding: 1.2rem;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.9rem;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
+        .industry-chip {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 100px; padding: 8px 18px;
+            font-size: 13px; color: var(--text-secondary);
+            transition: all 0.2s; display: flex; align-items: center; gap: 6px;
         }
-        .industry-item:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-2px);
-        }
-        .industry-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+        .industry-chip:hover { border-color: var(--purple); color: var(--text); }
 
         /* ===== CTA ===== */
-        .cta {
-            padding: 5rem 1.5rem;
-            text-align: center;
+        .cta-section {
+            padding: 80px 24px; text-align: center; position: relative; z-index: 1;
         }
         .cta-box {
-            max-width: 700px;
-            margin: 0 auto;
+            max-width: 600px; margin: 0 auto;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 48px 32px;
+            position: relative; overflow: hidden;
+        }
+        .cta-box::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
             background: var(--gradient);
-            border-radius: 24px;
-            padding: 3.5rem 2rem;
-            color: white;
         }
-        .cta-box h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 1rem;
-        }
-        .cta-box p {
-            opacity: 0.9;
-            margin-bottom: 2rem;
-            font-size: 1.05rem;
-        }
-        .btn-white {
-            background: white;
-            color: var(--primary);
-            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-        }
-        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .cta-box h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.02em; }
+        .cta-box p { color: var(--text-secondary); margin-bottom: 28px; font-size: 15px; }
 
         /* ===== FOOTER ===== */
         footer {
-            background: var(--bg-dark);
-            color: rgba(255,255,255,0.5);
-            padding: 3rem 1.5rem;
-            text-align: center;
-            font-size: 0.85rem;
-        }
-        footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
-
-        /* ===== SCROLL REVEAL ===== */
-        .reveal {
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.7s ease, transform 0.7s cubic-bezier(.16,1,.3,1);
-        }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-
-        /* ===== ANIMATED CHAT DEMO ===== */
-        .chat-window { cursor: default; }
-        .msg { opacity: 0; transform: translateY(8px); transition: all 0.4s ease; }
-        .msg.show { opacity: 1; transform: translateY(0); }
-
-        /* ===== STATS BAR ===== */
-        .stats-bar {
-            display: flex; justify-content: center; gap: 48px;
-            padding: 48px 1.5rem; flex-wrap: wrap;
             border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            background: white;
+            padding: 24px; text-align: center;
+            font-size: 12px; color: var(--text-muted);
+            position: relative; z-index: 1;
         }
-        .stat-item { text-align: center; }
-        .stat-number { font-size: 2.2rem; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 0.85rem; color: var(--text-light); margin-top: 4px; }
+        footer a { color: var(--text-secondary); text-decoration: none; }
+        footer a:hover { color: var(--purple); }
 
-        /* ===== TESTIMONIAL ===== */
-        .testimonials { padding: 4rem 1.5rem; max-width: 900px; margin: 0 auto; }
-        .testimonial-card {
-            background: white; border: 1px solid var(--border); border-radius: 16px;
-            padding: 2rem; margin-bottom: 1.5rem; transition: all 0.3s;
-        }
-        .testimonial-card:hover { border-color: var(--primary-light); box-shadow: 0 8px 24px rgba(108,58,237,0.06); }
-        .testimonial-text { font-size: 1.05rem; line-height: 1.7; color: var(--text); font-style: italic; margin-bottom: 1rem; }
-        .testimonial-author { display: flex; align-items: center; gap: 12px; }
-        .testimonial-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary-light); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
-        .testimonial-name { font-weight: 600; font-size: 0.9rem; }
-        .testimonial-role { font-size: 0.8rem; color: var(--text-light); }
+        /* ===== REVEAL ===== */
+        .reveal { opacity: 0; transform: translateY(16px); transition: all 0.7s cubic-bezier(.16,1,.3,1); }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1rem; }
+            .nav-links a:not(.nav-cta) { display: none; }
             .features-grid { grid-template-columns: 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
-            .msg { max-width: 90%; }
-            .stats-bar { gap: 24px; }
-            .stat-number { font-size: 1.6rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .how-step { margin-left: 12px; padding-left: 24px; }
         }
     </style>
 </head>
 <body>
 
-<!-- NAVIGATION -->
+<div class="grid-bg"></div>
+<div class="glow-orb glow-1"></div>
+<div class="glow-orb glow-2"></div>
+
+<!-- NAV -->
 <nav>
     <div class="nav-inner">
-        <a href="#" class="logo">🤖 AI Asszisztens</a>
+        <a href="#" class="logo">⚡ AI Asszisztens</a>
         <div class="nav-links">
-            <a href="#funkciok">Funkciók</a>
-            <a href="#hogyan">Hogyan működik?</a>
-            <a href="#arak">Árak</a>
-            <a href="#kapcsolat" class="nav-cta">Ingyenes demo →</a>
+            <a href="#features">Funkciók</a>
+            <a href="#how">Hogyan működik</a>
+            <a href="#pricing">Árak</a>
+            <a href="#cta" class="nav-cta">Demo kérése →</a>
         </div>
     </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
-    <div class="hero-badge">🚀 Már 24 órán belül működhet</div>
-    <h1>Az ügyfélszolgálatod <span>soha nem alszik</span></h1>
-    <p>Mesterséges intelligencia alapú WhatsApp és webes chatbot, ami a te cégedre van tanítva. Válaszol ügyfeleidnek, gyűjti a leadeket, és árajánlatot kér – nonstop, automatikusan.</p>
+    <div class="hero-badge"><span class="dot"></span> Elérhető magyar vállalkozásoknak</div>
+    <h1>Az ügyfélszolgálatod<br><span class="gradient">soha nem alszik.</span></h1>
+    <p>AI chatbot ami a cégedre van tanítva. Válaszol WhatsApp-on és a weboldaladon, gyűjti a leadeket, árajánlatot kér — nonstop.</p>
     <div class="hero-buttons">
-        <a href="#kapcsolat" class="btn btn-primary">🎯 Ingyenes próba indítása</a>
-        <a href="#hogyan" class="btn btn-secondary">▶ Megnézem, hogyan működik</a>
-    </div>
-    <div class="social-proof">
-        <div class="avatars">
-            <span style="background:#E8D5FF">🏠</span>
-            <span style="background:#D5F5E3">🦷</span>
-            <span style="background:#FDE8D0">🍕</span>
-            <span style="background:#D5E8FF">🔧</span>
-        </div>
-        <span>Már <strong>10+ vállalkozás</strong> használja Magyarországon</span>
+        <a href="#cta" class="btn btn-primary">🚀 Ingyenes próba</a>
+        <a href="#how" class="btn btn-secondary">Hogyan működik? →</a>
     </div>
 </section>
 
-<!-- CHAT DEMO -->
+<!-- TERMINAL DEMO -->
 <div class="demo-section">
-    <div class="chat-window">
-        <div class="chat-header">
-            <div class="chat-header-avatar">🤖</div>
-            <div class="chat-header-info">
-                <h4>Példa Kft. – AI Asszisztens</h4>
-                <span>🟢 Online — válaszol azonnal</span>
+    <div class="terminal">
+        <div class="terminal-bar">
+            <span class="terminal-dot red"></span>
+            <span class="terminal-dot yellow"></span>
+            <span class="terminal-dot green"></span>
+            <span class="terminal-title">ai-asszisztens — live demo</span>
+        </div>
+        <div class="terminal-body" id="terminal-body"></div>
+    </div>
+    <div class="chat-preview" id="chat-preview">
+        <div class="chat-preview-header">
+            <div class="chat-preview-avatar">🤖</div>
+            <div>
+                <div class="chat-preview-name">Példa Kft. — AI Asszisztens</div>
+                <div class="chat-preview-status">● Online</div>
             </div>
         </div>
-        <div class="msg msg-out">Sziasztok, szeretnék árajánlatot kérni új nyílászárókra.</div>
-        <div class="msg msg-in">Üdvözlöm! 😊 Szívesen segítek az árajánlatban. Ahhoz, hogy pontos árat tudjak mondani, meg tudná adni a következőket?<br><br>1️⃣ Hány darab ablakról van szó?<br>2️⃣ Mekkora méretben gondolkodik?<br>3️⃣ Milyen típusú (bukó-nyíló, fix, stb.)?</div>
-        <div class="msg msg-out">3 darab, 120x150-es, bukó-nyíló</div>
-        <div class="msg msg-in">Köszönöm! 3 db 120×150 cm-es bukó-nyíló ablak. A végleges árajánlathoz kollégám felveszi Önnel a kapcsolatot. 📞<br><br>Meg tudná adni a telefonszámát vagy email címét?</div>
-        <div class="msg msg-out">+36 30 123 4567</div>
-        <div class="msg msg-in">Tökéletes, köszönöm! ✅ Kollégám 24 órán belül jelentkezik az árajánlattal a megadott számon. Más kérdés amiben segíthetek?</div>
-        <div class="msg-time">Válaszidő: &lt;5 másodperc ⚡</div>
+        <div id="chat-messages"></div>
     </div>
 </div>
 
-<!-- STATS BAR -->
-<div class="stats-bar reveal">
-    <div class="stat-item">
-        <div class="stat-number">&lt;5 mp</div>
-        <div class="stat-label">Átlagos válaszidő</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-number">24/7</div>
-        <div class="stat-label">Elérhetőség</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-number">99%</div>
-        <div class="stat-label">Ügyfél elégedettség</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-number">3x</div>
-        <div class="stat-label">Több lead gyűjtés</div>
-    </div>
+<!-- STATS -->
+<div class="stats reveal">
+    <div class="stat"><div class="stat-number">&lt;5s</div><div class="stat-label">Válaszidő</div></div>
+    <div class="stat"><div class="stat-number">24/7</div><div class="stat-label">Elérhetőség</div></div>
+    <div class="stat"><div class="stat-number">3×</div><div class="stat-label">Több lead</div></div>
+    <div class="stat"><div class="stat-number">24h</div><div class="stat-label">Setup idő</div></div>
 </div>
 
 <!-- FEATURES -->
-<section class="features" id="funkciok">
+<section class="features" id="features">
     <div class="section-header">
-        <h2>Minden, amire szüksége van</h2>
-        <p>Nem csak egy chatbot — egy teljes ügyfélszolgálati megoldás</p>
+        <div class="section-tag">Funkciók</div>
+        <h2>Minden, amire szükséged van</h2>
+        <p>Nem chatbot. Ügyfélszolgálati AI.</p>
     </div>
     <div class="features-grid">
-        <div class="feature-card">
+        <div class="feature-card reveal">
             <div class="feature-icon">💬</div>
-            <h3>WhatsApp & Webes chat</h3>
-            <p>Ott van, ahol az ügyfelei: WhatsApp-on, Messenger-en vagy a weboldalán. Egy helyről kezelve.</p>
+            <h3>WhatsApp & Web</h3>
+            <p>Ott van, ahol az ügyfeleid. WhatsApp-on, weboldaladon, vagy mindkettőn egyszerre.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card reveal">
             <div class="feature-icon">🧠</div>
-            <h3>Valódi mesterséges intelligencia</h3>
-            <p>Nem előre megírt válaszok — az AI érti, amit az ügyfél kérdez, és természetesen válaszol. Magyarul.</p>
+            <h3>Valódi AI</h3>
+            <p>Nem script — érti amit kérdeznek, és természetesen válaszol. Magyarul, a te hangnemeden.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card reveal">
             <div class="feature-icon">📋</div>
-            <h3>Automatikus lead gyűjtés</h3>
-            <p>Név, telefonszám, email, igény — az AI összegyűjti és elküldi Önnek, még mielőtt felhívná az ügyfelet.</p>
+            <h3>Lead gyűjtés</h3>
+            <p>Név, telefon, email, igény — összegyűjti és elküldi neked valós időben.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card reveal">
             <div class="feature-icon">📅</div>
             <h3>Időpontfoglalás</h3>
-            <p>Ügyfelei közvetlenül időpontot foglalhatnak a chatben — integrálható a Google Naptárjával.</p>
+            <p>Google Naptár integráció — ügyfeleid közvetlenül foglalnak időpontot.</p>
         </div>
-        <div class="feature-card">
+        <div class="feature-card reveal">
             <div class="feature-icon">🌍</div>
-            <h3>Többnyelvű támogatás</h3>
-            <p>Magyar, angol, német, vagy bármilyen nyelv — az AI automatikusan felismeri és átvált.</p>
+            <h3>Többnyelvű</h3>
+            <p>Magyar, angol, német — automatikusan felismeri az ügyfél nyelvét.</p>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Heti riportok</h3>
-            <p>Minden héten kap egy összefoglalót: hány érdeklődő volt, mit kérdeztek, és mit érdemes javítani.</p>
+        <div class="feature-card reveal">
+            <div class="feature-icon">🔒</div>
+            <h3>Biztonságos</h3>
+            <p>4 rétegű safety rendszer. Nem hallucináll, nem ad rossz információt.</p>
         </div>
     </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="how-it-works" id="hogyan">
+<section class="how-section" id="how">
     <div class="section-header">
+        <div class="section-tag">Kezdés</div>
         <h2>3 lépésben indul</h2>
-        <p>Semmit nem kell tudnia a mesterséges intelligenciáról</p>
+        <p>Semmit nem kell tudnod az AI-ról.</p>
     </div>
-    <div class="steps">
-        <div class="step">
-            <div class="step-number">1</div>
+    <div class="how-grid">
+        <div class="how-step reveal" data-step="1">
             <div>
-                <h3>Mondja el, mit csinál a cége</h3>
-                <p>15 perces beszélgetés során megismerjük a vállalkozását, a szolgáltatásait és a gyakori kérdéseket.</p>
+                <h3>Beszélünk a cégedről</h3>
+                <p>15 perces hívás — megismerjük a szolgáltatásaid, az áraid, a hangnemet.</p>
             </div>
         </div>
-        <div class="step">
-            <div class="step-number">2</div>
+        <div class="how-step reveal" data-step="2">
             <div>
-                <h3>Mi beállítjuk az AI-t – 24 órán belül</h3>
-                <p>Az Ön cégére tanítjuk az asszisztenst. Árak, nyitvatartás, szolgáltatások, hangnem — minden egyedi.</p>
+                <h3>24 órán belül beállítjuk</h3>
+                <p>A te cégédre tanítjuk az AI-t. Te nem nyúlsz semmihez.</p>
             </div>
         </div>
-        <div class="step">
-            <div class="step-number">3</div>
+        <div class="how-step reveal" data-step="3">
             <div>
-                <h3>Bekapcsoljuk — és ennyi!</h3>
-                <p>A chatbot megjelenik a WhatsApp-ján és/vagy a weboldalán. Az érdeklődők adatait Ön kapja valós időben.</p>
+                <h3>Bekapcsoljuk — és megy</h3>
+                <p>WhatsApp-on vagy a weboldalon. A leadeket te kapod valós időben.</p>
             </div>
         </div>
     </div>
 </section>
 
 <!-- PRICING -->
-<section class="pricing" id="arak">
+<section class="pricing" id="pricing">
     <div class="section-header">
-        <h2>Egyszerű, átlátható árak</h2>
+        <div class="section-tag">Árak</div>
+        <h2>Egyszerű árazás</h2>
         <p>Nincs rejtett költség. Bármikor lemondható.</p>
     </div>
     <div class="pricing-grid">
-        <div class="price-card">
+        <div class="price-card reveal">
             <h3>Alap</h3>
-            <p class="price-desc">Kisebb vállalkozásoknak</p>
-            <div class="price">19.900 <span>Ft / hó</span></div>
+            <div class="price-desc">Kisebb vállalkozásoknak</div>
+            <div class="price-amount">19.900 <span>Ft</span></div>
+            <div class="price-period">havonta + ÁFA</div>
             <ul class="price-features">
                 <li>WhatsApp VAGY webes chatbot</li>
-                <li>Kérdés-válasz az Ön céges infói alapján</li>
+                <li>Kérdés-válasz céges infók alapján</li>
                 <li>Automatikus lead gyűjtés</li>
-                <li>Email értesítés új érdeklődőkről</li>
+                <li>Email értesítések</li>
                 <li>Havi riport</li>
             </ul>
-            <a href="#kapcsolat" class="btn btn-secondary" style="width:100%;justify-content:center;">Próba indítása</a>
+            <a href="#cta" class="price-btn secondary">Próba indítása</a>
         </div>
-        <div class="price-card popular">
-            <div class="popular-badge">⭐ Legnépszerűbb</div>
+        <div class="price-card popular reveal">
+            <div class="popular-tag">⚡ Népszerű</div>
             <h3>Pro</h3>
-            <p class="price-desc">Növekvő vállalkozásoknak</p>
-            <div class="price">34.900 <span>Ft / hó</span></div>
+            <div class="price-desc">Növekvő vállalkozásoknak</div>
+            <div class="price-amount">34.900 <span>Ft</span></div>
+            <div class="price-period">havonta + ÁFA</div>
             <ul class="price-features">
                 <li>WhatsApp ÉS webes chatbot</li>
-                <li>Minden, ami az Alap csomagban</li>
-                <li>Időpontfoglalás (Google Naptár)</li>
+                <li>Időpontfoglalás</li>
                 <li>Többnyelvű támogatás</li>
-                <li>Heti riport</li>
+                <li>Heti riportok</li>
                 <li>Prioritásos support</li>
             </ul>
-            <a href="#kapcsolat" class="btn btn-primary" style="width:100%;justify-content:center;">Próba indítása</a>
+            <a href="#cta" class="price-btn primary">Próba indítása</a>
         </div>
-        <div class="price-card">
+        <div class="price-card reveal">
             <h3>Prémium</h3>
-            <p class="price-desc">Komolyabb igényekre</p>
-            <div class="price">59.900 <span>Ft / hó</span></div>
+            <div class="price-desc">Komolyabb igényekre</div>
+            <div class="price-amount">59.900 <span>Ft</span></div>
+            <div class="price-period">havonta + ÁFA</div>
             <ul class="price-features">
-                <li>Minden, ami a Pro csomagban</li>
-                <li>Egyedi conversation flow-k</li>
+                <li>Minden a Pro-ból</li>
+                <li>Egyedi flow-k</li>
                 <li>CRM integráció</li>
-                <li>Részletes analitika dashboard</li>
+                <li>Analitika dashboard</li>
                 <li>Dedikált account manager</li>
-                <li>Korlátlan beszélgetés</li>
             </ul>
-            <a href="#kapcsolat" class="btn btn-secondary" style="width:100%;justify-content:center;">Próba indítása</a>
+            <a href="#cta" class="price-btn secondary">Próba indítása</a>
         </div>
     </div>
 </section>
@@ -709,117 +515,125 @@
 <!-- INDUSTRIES -->
 <section class="industries">
     <div class="section-header">
-        <h2>Bármilyen iparágban működik</h2>
-        <p>Az AI asszisztens alkalmazkodik az Ön vállalkozásához</p>
+        <div class="section-tag">Iparágak</div>
+        <h2>Bármilyen cégnél működik</h2>
     </div>
     <div class="industries-grid">
-        <div class="industry-item"><div class="industry-icon">🏠</div>Nyílászáró cégek</div>
-        <div class="industry-item"><div class="industry-icon">🦷</div>Fogorvosok</div>
-        <div class="industry-item"><div class="industry-icon">✂️</div>Szépségszalonok</div>
-        <div class="industry-item"><div class="industry-icon">🍕</div>Éttermek</div>
-        <div class="industry-item"><div class="industry-icon">🔧</div>Szerelők</div>
-        <div class="industry-item"><div class="industry-icon">🏋️</div>Fitnesz stúdiók</div>
-        <div class="industry-item"><div class="industry-icon">🏘️</div>Ingatlanügynökök</div>
-        <div class="industry-item"><div class="industry-icon">⚖️</div>Ügyvédek</div>
-        <div class="industry-item"><div class="industry-icon">🚗</div>Autókereskedők</div>
-        <div class="industry-item"><div class="industry-icon">🏥</div>Klinikák</div>
-        <div class="industry-item"><div class="industry-icon">📦</div>Webshopok</div>
-        <div class="industry-item"><div class="industry-icon">🎓</div>Oktatás</div>
-    </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section class="testimonials">
-    <div class="section-header reveal">
-        <h2>Ezt mondják ügyfeleink</h2>
-    </div>
-    <div class="testimonial-card reveal">
-        <div class="testimonial-text">"Amióta bekapcsoltuk az AI asszisztenst, hétvégén is jönnek az ajánlatkérések. Az ügyfelek azt hiszik, hogy valaki ül a telefon mellett — de csak a bot válaszol."</div>
-        <div class="testimonial-author">
-            <div class="testimonial-avatar">🏠</div>
-            <div>
-                <div class="testimonial-name">Rodo Nyílászáró</div>
-                <div class="testimonial-role">Ablak és redőny forgalmazó</div>
-            </div>
-        </div>
-    </div>
-    <div class="testimonial-card reveal">
-        <div class="testimonial-text">"A beállítás tényleg 24 óra volt. Megmondtam milyen kérdésekre kell válaszolnia, és másnap már működött. Azóta nem kell este 10-kor emaileket olvasnom."</div>
-        <div class="testimonial-author">
-            <div class="testimonial-avatar">✂️</div>
-            <div>
-                <div class="testimonial-name">Szépségszalon tulajdonos</div>
-                <div class="testimonial-role">Budapest</div>
-            </div>
-        </div>
+        <div class="industry-chip">🏠 Nyílászáró cégek</div>
+        <div class="industry-chip">🦷 Fogorvosok</div>
+        <div class="industry-chip">✂️ Szépségszalonok</div>
+        <div class="industry-chip">🍕 Éttermek</div>
+        <div class="industry-chip">🔧 Szerelők</div>
+        <div class="industry-chip">🏋️ Fitnesz</div>
+        <div class="industry-chip">🏘️ Ingatlan</div>
+        <div class="industry-chip">⚖️ Ügyvédek</div>
+        <div class="industry-chip">🚗 Autókereskedők</div>
+        <div class="industry-chip">📦 Webshopok</div>
+        <div class="industry-chip">🏥 Klinikák</div>
+        <div class="industry-chip">🎓 Oktatás</div>
     </div>
 </section>
 
 <!-- CTA -->
-<section class="cta" id="kapcsolat">
-    <div class="cta-box">
-        <h2>Próbálja ki ingyen, 14 napig</h2>
-        <p>Beállítjuk az AI asszisztenst a cégére – teljesen ingyen. Ha tetszik, marad. Ha nem, nem fizet semmit.</p>
-        <a href="https://wa.me/36207734132?text=Sziasztok!%20Érdeklődnék%20az%20AI%20asszisztens%20szolgáltatás%20iránt." class="btn btn-white">💬 Írjon nekünk WhatsApp-on</a>
+<section class="cta-section" id="cta">
+    <div class="cta-box reveal">
+        <h2>Próbáld ki ingyen, 14 napig</h2>
+        <p>Beállítjuk a cégedre — teljesen ingyen. Ha tetszik, marad. Ha nem, nem fizetsz.</p>
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+            <a href="https://wa.me/36207734132?text=Szia!%20Érdeklődnék%20az%20AI%20asszisztens%20iránt." class="btn btn-primary">💬 WhatsApp</a>
+            <a href="mailto:info@aiasszisztens.hu?subject=Érdeklődés" class="btn btn-secondary">✉️ Email</a>
+        </div>
     </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-    <p>© 2026 AI Asszisztens. Minden jog fenntartva.</p>
-    <p style="margin-top:0.5rem;"><a href="#">Adatvédelem</a> · <a href="#">ÁSZF</a> · <a href="mailto:info@aiasszisztens.hu">info@aiasszisztens.hu</a></p>
+    <p>© 2026 AI Asszisztens · <a href="mailto:info@aiasszisztens.hu">info@aiasszisztens.hu</a></p>
 </footer>
 
-<!-- Chat Widget (meta: selling ourselves!) -->
+<!-- Widget -->
 <script src="widget/chat-widget.js"
     data-bot-id="aiasszisztens"
-    data-color="#6C3AED"
+    data-color="#a855f7"
     data-title="AI Asszisztens"
-    data-greeting="Szia! 👋 Kérdezz bátran a szolgáltatásunkról, árakról, vagy próbáld ki a demót!"
+    data-greeting="Szia! 👋 Kérdezz bátran — árak, funkciók, demo, bármi!"
 ></script>
 
 <script>
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
+// Terminal animation
+const termLines = [
+    { prompt: '$ ', cmd: 'ai-asszisztens deploy --business ', string: '"Példa Kft."' },
+    { output: '→ Analyzing business data...' },
+    { output: '→ Training AI on 47 FAQ entries...' },
+    { output: '→ Configuring WhatsApp channel...' },
+    { output: '<span class="keyword">✓</span> <span class="string">Bot deployed in 23 seconds</span>' },
+    { prompt: '$ ', cmd: 'ai-asszisztens stats --today' },
+    { output: '  Conversations:  <span class="string">142</span>' },
+    { output: '  Leads captured: <span class="string">38</span>' },
+    { output: '  Avg response:   <span class="string">2.1s</span>' },
+    { output: '  Satisfaction:   <span class="string">98.7%</span>' },
+];
+
+const termBody = document.getElementById('terminal-body');
+let lineIdx = 0;
+function addTermLine() {
+    if (lineIdx >= termLines.length) return;
+    const line = termLines[lineIdx];
+    const div = document.createElement('div');
+    div.className = 'terminal-line';
+    div.style.animationDelay = '0s';
+    if (line.prompt) {
+        div.innerHTML = `<span class="prompt">${line.prompt}</span><span class="cmd">${line.cmd}</span>${line.string ? `<span class="string">${line.string}</span>` : ''}`;
+    } else {
+        div.innerHTML = `<span class="output">${line.output}</span>`;
+    }
+    termBody.appendChild(div);
+    lineIdx++;
+    setTimeout(addTermLine, 300);
+}
+
+// Chat animation
+const chatMsgs = [
+    { type: 'customer', text: 'Sziasztok, mennyi egy bukó-nyíló ablak?' },
+    { type: 'bot', text: 'Üdvözlöm! 😊 A bukó-nyíló ablak ára mérettől függ. Egy 120×150 cm-es, 3 rétegű üveggel: <strong>~89.000 Ft-tól</strong>. Hány darabra lenne szükség?' },
+    { type: 'customer', text: '3 darab, 120x150' },
+    { type: 'bot', text: 'Köszönöm! 3 db ablak, tájékoztató ár: <strong>~267.000 Ft</strong>. Pontos ajánlathoz meg tudná adni a telefonszámát? 📞' },
+    { type: 'customer', text: '+36 30 123 4567' },
+    { type: 'bot', text: '✅ Rögzítettem! Kollégám 24 órán belül hívja a megadott számon.' },
+];
+
+const chatContainer = document.getElementById('chat-messages');
+let msgIdx = 0;
+function addChatMsg() {
+    if (msgIdx >= chatMsgs.length) return;
+    const msg = chatMsgs[msgIdx];
+    const div = document.createElement('div');
+    div.className = `chat-msg ${msg.type}`;
+    div.innerHTML = msg.text;
+    chatContainer.appendChild(div);
+    setTimeout(() => div.classList.add('show'), 50);
+    msgIdx++;
+    setTimeout(addChatMsg, 800);
+}
+
+// Start animations when visible
+const demoObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-
-// Failsafe
-setTimeout(() => {
-    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
-}, 3000);
-
-// Animated chat demo
-const chatMsgs = document.querySelectorAll('.chat-window .msg');
-const chatObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            let delay = 0;
-            chatMsgs.forEach((msg, i) => {
-                setTimeout(() => msg.classList.add('show'), delay);
-                delay += 600;
-            });
-            chatObserver.unobserve(entry.target);
+            setTimeout(addTermLine, 500);
+            setTimeout(addChatMsg, termLines.length * 300 + 800);
+            demoObserver.unobserve(entry.target);
         }
     });
 }, { threshold: 0.3 });
+demoObserver.observe(document.querySelector('.terminal'));
 
-if (chatMsgs.length > 0) {
-    chatObserver.observe(document.querySelector('.chat-window'));
-}
-
-// Add reveal class to feature cards, price cards, industry items
-document.querySelectorAll('.feature-card, .price-card, .industry-item, .step').forEach(el => {
-    el.classList.add('reveal');
-    observer.observe(el);
-});
+// Scroll reveal
+const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.05 });
+document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+setTimeout(() => document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible')), 3000);
 </script>
 
 </body>
