@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Asszisztens – Mesterséges Intelligencia Ügyfélszolgálat Vállalkozásoknak</title>
+    <meta name="description" content="WhatsApp és webes AI chatbot vállalkozásoknak. 24/7 ügyfélszolgálat, időpontfoglalás, árajánlatkérés – automatikusan. Setup 24 órán belül.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C3AED;
+            --primary-dark: #5B21B6;
+            --primary-light: #8B5CF6;
+            --accent: #10B981;
+            --accent-dark: #059669;
+            --bg: #FAFAFA;
+            --bg-dark: #0F0F23;
+            --text: #1F2937;
+            --text-light: #6B7280;
+            --text-white: #F9FAFB;
+            --card: #FFFFFF;
+            --border: #E5E7EB;
+            --gradient: linear-gradient(135deg, #6C3AED 0%, #3B82F6 50%, #10B981 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 0.8rem 0;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 800;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-cta {
+            background: var(--primary) !important;
+            color: white !important;
+            padding: 0.6rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600 !important;
+            transition: background 0.2s;
+        }
+        .nav-cta:hover { background: var(--primary-dark) !important; }
+
+        /* ===== HERO ===== */
+        .hero {
+            padding: 8rem 1.5rem 5rem;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(108,58,237,0.1);
+            color: var(--primary);
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            color: var(--bg-dark);
+        }
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 650px;
+            margin: 0 auto 2.5rem;
+        }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.9rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 14px rgba(108,58,237,0.3);
+        }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-secondary {
+            background: white;
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+        .btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ===== SOCIAL PROOF ===== */
+        .social-proof {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 3rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        .avatars {
+            display: flex;
+        }
+        .avatars span {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid white;
+            margin-left: -10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+        .avatars span:first-child { margin-left: 0; }
+
+        /* ===== CHAT DEMO ===== */
+        .demo-section {
+            max-width: 700px;
+            margin: 2rem auto 4rem;
+            padding: 0 1.5rem;
+        }
+        .chat-window {
+            background: #ECE5DD;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .chat-header {
+            background: #075E54;
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: 12px 12px 0 0;
+            margin: -1.5rem -1.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .chat-header-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        .chat-header-info h4 { font-size: 0.95rem; margin-bottom: 0.1rem; }
+        .chat-header-info span { font-size: 0.75rem; opacity: 0.8; }
+        .msg {
+            max-width: 80%;
+            padding: 0.6rem 0.9rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+        }
+        .msg-in {
+            background: white;
+            margin-right: auto;
+            border-bottom-left-radius: 2px;
+        }
+        .msg-out {
+            background: #DCF8C6;
+            margin-left: auto;
+            border-bottom-right-radius: 2px;
+        }
+        .msg-time {
+            font-size: 0.65rem;
+            color: #999;
+            text-align: right;
+            margin-top: 0.2rem;
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            padding: 5rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+        .section-header h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+            color: var(--bg-dark);
+        }
+        .section-header p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            max-width: 550px;
+            margin: 0 auto;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .feature-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 30px rgba(108,58,237,0.08);
+            transform: translateY(-4px);
+        }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 5rem 1.5rem;
+        }
+        .how-it-works .section-header h2 { color: white; }
+        .how-it-works .section-header p { color: rgba(255,255,255,0.6); }
+        .steps {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            gap: 2rem;
+        }
+        .step {
+            display: flex;
+            gap: 1.5rem;
+            align-items: flex-start;
+        }
+        .step-number {
+            background: var(--gradient);
+            color: white;
+            width: 48px;
+            height: 48px;
+            min-width: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+        .step h3 { font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .step p { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+
+        /* ===== PRICING ===== */
+        .pricing {
+            padding: 5rem 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .price-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .price-card.popular {
+            border-color: var(--primary);
+            box-shadow: 0 10px 40px rgba(108,58,237,0.15);
+        }
+        .popular-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .price-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .price {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 1rem 0 0.3rem;
+        }
+        .price span { font-size: 1rem; font-weight: 500; color: var(--text-light); }
+        .price-desc {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+        .price-features {
+            text-align: left;
+            list-style: none;
+            margin-bottom: 2rem;
+        }
+        .price-features li {
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .price-features li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* ===== INDUSTRIES ===== */
+        .industries {
+            background: #F3F4F6;
+            padding: 5rem 1.5rem;
+        }
+        .industries-grid {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+        .industry-item {
+            background: white;
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .industry-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        .industry-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+
+        /* ===== CTA ===== */
+        .cta {
+            padding: 5rem 1.5rem;
+            text-align: center;
+        }
+        .cta-box {
+            max-width: 700px;
+            margin: 0 auto;
+            background: var(--gradient);
+            border-radius: 24px;
+            padding: 3.5rem 2rem;
+            color: white;
+        }
+        .cta-box h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+        .cta-box p {
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+        .btn-white {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+        }
+        .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--bg-dark);
+            color: rgba(255,255,255,0.5);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .msg { max-width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="logo">🤖 AI Asszisztens</a>
+        <div class="nav-links">
+            <a href="#funkciok">Funkciók</a>
+            <a href="#hogyan">Hogyan működik?</a>
+            <a href="#arak">Árak</a>
+            <a href="#kapcsolat" class="nav-cta">Ingyenes demo →</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-badge">🚀 Már 24 órán belül működhet</div>
+    <h1>Az ügyfélszolgálatod <span>soha nem alszik</span></h1>
+    <p>Mesterséges intelligencia alapú WhatsApp és webes chatbot, ami a te cégedre van tanítva. Válaszol ügyfeleidnek, gyűjti a leadeket, és árajánlatot kér – nonstop, automatikusan.</p>
+    <div class="hero-buttons">
+        <a href="#kapcsolat" class="btn btn-primary">🎯 Ingyenes próba indítása</a>
+        <a href="#hogyan" class="btn btn-secondary">▶ Megnézem, hogyan működik</a>
+    </div>
+    <div class="social-proof">
+        <div class="avatars">
+            <span style="background:#E8D5FF">🏠</span>
+            <span style="background:#D5F5E3">🦷</span>
+            <span style="background:#FDE8D0">🍕</span>
+            <span style="background:#D5E8FF">🔧</span>
+        </div>
+        <span>Már <strong>10+ vállalkozás</strong> használja Magyarországon</span>
+    </div>
+</section>
+
+<!-- CHAT DEMO -->
+<div class="demo-section">
+    <div class="chat-window">
+        <div class="chat-header">
+            <div class="chat-header-avatar">🤖</div>
+            <div class="chat-header-info">
+                <h4>Példa Kft. – AI Asszisztens</h4>
+                <span>🟢 Online — válaszol azonnal</span>
+            </div>
+        </div>
+        <div class="msg msg-out">Sziasztok, szeretnék árajánlatot kérni új nyílászárókra.</div>
+        <div class="msg msg-in">Üdvözlöm! 😊 Szívesen segítek az árajánlatban. Ahhoz, hogy pontos árat tudjak mondani, meg tudná adni a következőket?<br><br>1️⃣ Hány darab ablakról van szó?<br>2️⃣ Mekkora méretben gondolkodik?<br>3️⃣ Milyen típusú (bukó-nyíló, fix, stb.)?</div>
+        <div class="msg msg-out">3 darab, 120x150-es, bukó-nyíló</div>
+        <div class="msg msg-in">Köszönöm! 3 db 120×150 cm-es bukó-nyíló ablak. A végleges árajánlathoz kollégám felveszi Önnel a kapcsolatot. 📞<br><br>Meg tudná adni a telefonszámát vagy email címét?</div>
+        <div class="msg msg-out">+36 30 123 4567</div>
+        <div class="msg msg-in">Tökéletes, köszönöm! ✅ Kollégám 24 órán belül jelentkezik az árajánlattal a megadott számon. Más kérdés amiben segíthetek?</div>
+        <div class="msg-time">Válaszidő: &lt;5 másodperc ⚡</div>
+    </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="funkciok">
+    <div class="section-header">
+        <h2>Minden, amire szüksége van</h2>
+        <p>Nem csak egy chatbot — egy teljes ügyfélszolgálati megoldás</p>
+    </div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <h3>WhatsApp & Webes chat</h3>
+            <p>Ott van, ahol az ügyfelei: WhatsApp-on, Messenger-en vagy a weboldalán. Egy helyről kezelve.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🧠</div>
+            <h3>Valódi mesterséges intelligencia</h3>
+            <p>Nem előre megírt válaszok — az AI érti, amit az ügyfél kérdez, és természetesen válaszol. Magyarul.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📋</div>
+            <h3>Automatikus lead gyűjtés</h3>
+            <p>Név, telefonszám, email, igény — az AI összegyűjti és elküldi Önnek, még mielőtt felhívná az ügyfelet.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <h3>Időpontfoglalás</h3>
+            <p>Ügyfelei közvetlenül időpontot foglalhatnak a chatben — integrálható a Google Naptárjával.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">🌍</div>
+            <h3>Többnyelvű támogatás</h3>
+            <p>Magyar, angol, német, vagy bármilyen nyelv — az AI automatikusan felismeri és átvált.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Heti riportok</h3>
+            <p>Minden héten kap egy összefoglalót: hány érdeklődő volt, mit kérdeztek, és mit érdemes javítani.</p>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-it-works" id="hogyan">
+    <div class="section-header">
+        <h2>3 lépésben indul</h2>
+        <p>Semmit nem kell tudnia a mesterséges intelligenciáról</p>
+    </div>
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <div>
+                <h3>Mondja el, mit csinál a cége</h3>
+                <p>15 perces beszélgetés során megismerjük a vállalkozását, a szolgáltatásait és a gyakori kérdéseket.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <div>
+                <h3>Mi beállítjuk az AI-t – 24 órán belül</h3>
+                <p>Az Ön cégére tanítjuk az asszisztenst. Árak, nyitvatartás, szolgáltatások, hangnem — minden egyedi.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <div>
+                <h3>Bekapcsoljuk — és ennyi!</h3>
+                <p>A chatbot megjelenik a WhatsApp-ján és/vagy a weboldalán. Az érdeklődők adatait Ön kapja valós időben.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="arak">
+    <div class="section-header">
+        <h2>Egyszerű, átlátható árak</h2>
+        <p>Nincs rejtett költség. Bármikor lemondható.</p>
+    </div>
+    <div class="pricing-grid">
+        <div class="price-card">
+            <h3>Alap</h3>
+            <p class="price-desc">Kisebb vállalkozásoknak</p>
+            <div class="price">19.900 <span>Ft / hó</span></div>
+            <ul class="price-features">
+                <li>WhatsApp VAGY webes chatbot</li>
+                <li>Kérdés-válasz az Ön céges infói alapján</li>
+                <li>Automatikus lead gyűjtés</li>
+                <li>Email értesítés új érdeklődőkről</li>
+                <li>Havi riport</li>
+            </ul>
+            <a href="#kapcsolat" class="btn btn-secondary" style="width:100%;justify-content:center;">Próba indítása</a>
+        </div>
+        <div class="price-card popular">
+            <div class="popular-badge">⭐ Legnépszerűbb</div>
+            <h3>Pro</h3>
+            <p class="price-desc">Növekvő vállalkozásoknak</p>
+            <div class="price">34.900 <span>Ft / hó</span></div>
+            <ul class="price-features">
+                <li>WhatsApp ÉS webes chatbot</li>
+                <li>Minden, ami az Alap csomagban</li>
+                <li>Időpontfoglalás (Google Naptár)</li>
+                <li>Többnyelvű támogatás</li>
+                <li>Heti riport</li>
+                <li>Prioritásos support</li>
+            </ul>
+            <a href="#kapcsolat" class="btn btn-primary" style="width:100%;justify-content:center;">Próba indítása</a>
+        </div>
+        <div class="price-card">
+            <h3>Prémium</h3>
+            <p class="price-desc">Komolyabb igényekre</p>
+            <div class="price">59.900 <span>Ft / hó</span></div>
+            <ul class="price-features">
+                <li>Minden, ami a Pro csomagban</li>
+                <li>Egyedi conversation flow-k</li>
+                <li>CRM integráció</li>
+                <li>Részletes analitika dashboard</li>
+                <li>Dedikált account manager</li>
+                <li>Korlátlan beszélgetés</li>
+            </ul>
+            <a href="#kapcsolat" class="btn btn-secondary" style="width:100%;justify-content:center;">Próba indítása</a>
+        </div>
+    </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section class="industries">
+    <div class="section-header">
+        <h2>Bármilyen iparágban működik</h2>
+        <p>Az AI asszisztens alkalmazkodik az Ön vállalkozásához</p>
+    </div>
+    <div class="industries-grid">
+        <div class="industry-item"><div class="industry-icon">🏠</div>Nyílászáró cégek</div>
+        <div class="industry-item"><div class="industry-icon">🦷</div>Fogorvosok</div>
+        <div class="industry-item"><div class="industry-icon">✂️</div>Szépségszalonok</div>
+        <div class="industry-item"><div class="industry-icon">🍕</div>Éttermek</div>
+        <div class="industry-item"><div class="industry-icon">🔧</div>Szerelők</div>
+        <div class="industry-item"><div class="industry-icon">🏋️</div>Fitnesz stúdiók</div>
+        <div class="industry-item"><div class="industry-icon">🏘️</div>Ingatlanügynökök</div>
+        <div class="industry-item"><div class="industry-icon">⚖️</div>Ügyvédek</div>
+        <div class="industry-item"><div class="industry-icon">🚗</div>Autókereskedők</div>
+        <div class="industry-item"><div class="industry-icon">🏥</div>Klinikák</div>
+        <div class="industry-item"><div class="industry-icon">📦</div>Webshopok</div>
+        <div class="industry-item"><div class="industry-icon">🎓</div>Oktatás</div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="kapcsolat">
+    <div class="cta-box">
+        <h2>Próbálja ki ingyen, 14 napig</h2>
+        <p>Beállítjuk az AI asszisztenst a cégére – teljesen ingyen. Ha tetszik, marad. Ha nem, nem fizet semmit.</p>
+        <a href="https://wa.me/36207734132?text=Sziasztok!%20Érdeklődnék%20az%20AI%20asszisztens%20szolgáltatás%20iránt." class="btn btn-white">💬 Írjon nekünk WhatsApp-on</a>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>© 2026 AI Asszisztens. Minden jog fenntartva.</p>
+    <p style="margin-top:0.5rem;"><a href="#">Adatvédelem</a> · <a href="#">ÁSZF</a> · <a href="mailto:info@aiasszisztens.hu">info@aiasszisztens.hu</a></p>
+</footer>
+
+</body>
+</html>
